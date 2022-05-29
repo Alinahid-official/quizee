@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://static.opentok.com/v1/js/video-express.js"></script>
+    <title>Document</title>
+</head>
+<style>
+    body {
+      margin: 0;
+    }
+    
+    /* Assuming the name of the PreviewPublisher's container is previewContainer */
+    #previewContainer {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      justify-content: flex-end;
+      border-color: black;
+      border-radius: 5px;
+      border-style: dashed;
+      width: 640px;
+      height: 480px;
+      padding: 20px;
+    }
+    
+    /* Assuming the name of the Room's container is roomContainer */
+    #roomContainer {
+      width: 100vw;
+      height: calc(100vh - 90px);
+      background-color: #ddd;
+      position: relative;
+    }
+    #roomContainer > .OT_publisher {
+      top: 25px;
+      right: 25px;
+      position: absolute;
+      border-radius: 10px;
+    }
+    #roomContainer > .OT_screenshare {
+      top: 25px;
+      left: 25px;
+      position: absolute;
+      border-radius: 10px;
+    }
+  </style> 
+  <body>
+
+     <div id="roomContainer"></div> 
+      <script type="text/javascript">
+        const room = new VideoExpress.Room({
+          apiKey: '47464181', // add your OpenTok API key
+          sessionId: '1_MX40NzQ2NDE4MX5-MTY0ODA0NDkxNDI2OH5WeGtYUDY4Ty9McUxNSGRhQ2VCS2NXQkd-fg', // add your OpenTok Session ID
+          token: 'T1==cGFydG5lcl9pZD00NzQ2NDE4MSZzaWc9MzhkZWRiNjQ5ODMwNjY3N2QzYTlkMjQwZGU4YzU1Y2Y0Y2U3NmE3NTpzZXNzaW9uX2lkPTFfTVg0ME56UTJOREU0TVg1LU1UWTBPREEwTkRreE5ESTJPSDVXZUd0WVVEWTRUeTlNY1V4TlNHUmhRMlZDUzJOWFFrZC1mZyZjcmVhdGVfdGltZT0xNjQ4MDQ0OTMzJm5vbmNlPTAuMDQ2MzczMjUwODcwNzUwODQmcm9sZT1wdWJsaXNoZXImZXhwaXJlX3RpbWU9MTY1MDYzNjkzMSZpbml0aWFsX2xheW91dF9jbGFzc19saXN0PQ==', // add your OpenTok token
+          roomContainer: 'roomContainer',
+        });
+       
+        room.join();
+       </script>
+
+  </body>
+</html>

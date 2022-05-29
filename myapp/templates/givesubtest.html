@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://static.opentok.com/v1/js/video-express.js"></script>
+    <link rel="stylesheet" href="/static/css/extra.css">
+    <title>Document</title>
+</head>
+<body>
+    <div id="content">
+        <div class="dash_head">
+            welcome to Calbire Clinch
+        </div>
+        <div>
+            TIME LEFT:<div id="time">{{ exam.duration}}</div>
+        </div>
+        <div id='total' style="display:none">{{exam.total_questions}}</div>
+        
+        <div id="roomContainer"></div>
+        <div class='form-content'>
+            <input id="studentEmail" style="display:none" value="{{email}}"/>
+            <input id="examId" style="display:none" value="{{exam.exam_id}}"/>
+            <form action='' id='ansForm' name='answers' enctype="multipart/form-data" method="POST"> 
+                {% csrf_token %}
+                {% for item in data %}
+                <div id='{{ item.qno}}' style='display:none;' > 
+                    <h3>{{item.qno}}) {{item.question}}</h3>
+                    <div class='options'>
+                        <input type='file' name='{{item.qno}}'/>
+                    </div>
+                    
+                    
+                </div>
+                {% endfor%} 
+                
+            
+            
+          
+            <button class='btn btn-info' id='prev'>previous</button>
+            <button class='btn btn-info' id='next'>next</button>
+            <button class="btn btn-danger" id='submit_button' type='submit'>submit</button>
+        </form>
+        </div>
+       
+    <video id="stream" width="370" height="320">
+        <canvas id="capture" width="370" height="320">
+        </canvas>
+    </div>
+    
+    <script>
+        var warning=3 
+        var notblur=false
+        var stream = document.getElementById( "stream" );
+        var cameraStream = null;
+        function startStreaming() {
+
+            var mediaSupport = 'mediaDevices' in navigator;
+          
+            if( mediaSupport && null == cameraStream ) {
+          
+              navigator.mediaDevices.getUserMedia( { video: true } )
+              .then( function( mediaStream ) {
+          
+                cameraStream = mediaStream;
+          
+                stream.srcObject = mediaStream;
+          
+                stream.play();
+              })
+              .catch( function( err ) {
+          
+                console.log( "Unable to access camera: " + err );
+              });
+            }
+            else {
+          
+              alert( 'Your browser does not support media devices.' );
+          
+              return;
+            }
+          }
+          function captureSnapshot() {
+  
+            if( null != cameraStream ) {
+              var ctx = capture.getContext( '2d' );
+              var img = new Image();
+              ctx.drawImage( stream, 0, 0, capture.width, capture.height );
+              img.src = capture.toDataURL( "image/png" );
+              img.width	= 340;
+              var d1 = capture.toDataURL("image/png");
+              var res = d1.replace("data:image/png;base64,", "");
+        
+               // var average = values / length;
+        
+                //console.log(average)
+               // console.log(Math.round(average - 40));
+        
+                var studentEmail = document.getElementById("studentEmail").value;
+                var examId = document.getElementById("examId").value;
+                $.ajax({
+                    url: "/video_feed/",
+                    type:"post",
+                    
+                    data : {img:res,
+                            email:studentEmail,
+                            examId:examId
+                        },
+                    success: function(data){
+                        console.log(data)
+                    }
+                })
+            }   
+                    
+             setTimeout(captureSnapshot, 10000);
+            }
+            
+        var curr=1
+        var total =parseInt( $('#total').text());
+          function displayQuestion(qno){
+        
+            var prev=qno-1
+            var next=qno+1
+            
+                   
+                    
+               if(qno==1){
+                   
+                document.getElementById('prev').disabled=true;
+                document.getElementById(qno).style.display='block'
+                document.getElementById(next).style.display='none'
+               }
+            
+                if(qno==total){
+               
+                 document.getElementById(qno).style.display='block'
+                 document.getElementById(prev).style.display='none'
+               document.getElementById('next').disabled=true
+                
+               }
+               
+               if(qno!=1 && qno!=total){
+                  
+                document.getElementById('prev').disabled=false;
+                document.getElementById('next').disabled=false;
+                   document.getElementById(qno).style.display='block'
+                   document.getElementById(prev).style.display='none'
+                   document.getElementById(next).style.display='none'
+               
+               }
+           }
+       $(document).on('click', '#next', function(e){
+        e.preventDefault();
+        curr += 1;
+        displayQuestion(curr);
+        
+        
+    });
+    $(document).on('click', '#prev', function(e){
+        e.preventDefault();
+        curr -= 1;
+        displayQuestion(curr);
+        
+        
+    });
+    
+    var flag_time = true;
+    function startTimer(duration, display) {
+    
+    var interval = setInterval(function () {
+        var now = new Date().getTime();
+        var timeleft = duration - now;
+       // console.log(timeleft)
+        // var days = Math.floor(timeleft / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((timeleft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((timeleft % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((timeleft % (1000 * 60)) / 1000);
+
+        display.text(hours + ":" + minutes + ":" + seconds);
+        if(timeleft <0){
+            console.log('time up')
+            stopStreaming()
+            clearInterval(interval)
+            alert('Time up')
+           $('#ansForm').submit()
+           window.onbeforeunload = null;
+           notblur=true
+           // console.log(form)
+
+            
+            
+        }
+
+
+    }, 1000);
+
+    
+}
+{% comment %} $(window).blur(function() {
+    if(notblur){
+        notblur=false
+    }
+    else{
+        if(warning==0){
+            $('#ansForm').submit()
+           window.onbeforeunload = null;
+           notblur=true
+        }
+        else{
+            warning=warning-1
+        alert(warning+' warinngs remainings!! please donot change tabs');
+        }
+    }
+    
+    //do something else
+ }); {% endcomment %}
+
+    window.onload=function(){
+        displayQuestion(1)
+        var display=$('#time')
+        var time = $('#time').text();
+        var [hh,mm,ss] = time.split(':');
+        hh = parseInt(hh);
+        mm = parseInt(mm);
+        ss = parseInt(ss);
+        var seconds = hh*3600 + mm*60 + ss;
+        var now=new Date().getTime()
+        var countDownDate = new Date(now + seconds*1000)
+        startStreaming();
+        startTimer(countDownDate, display);
+        captureSnapshot();
+        
+        
+    }
+    $(document).on('click','#submit_button',function(e){
+         e.preventDefault(); 
+        if(confirm('Are you sure want to submit')==true){
+            $('#ansForm').submit()
+            notblur=true
+            window.onbeforeunload = null;
+        }
+        
+    })
+    history.pushState(null, document.title, location.href);
+window.addEventListener('popstate', function (event)
+{
+    notblur=true
+    const leavePage = confirm("Are you sure want to exit");
+    if (leavePage) {
+        history.back(); 
+    } else {
+        history.pushState(null, document.title, location.href);
+    }  
+});
+ {% comment %} $(document).ready(function () {
+        $('body').bind('select cut copy paste', function (e) {
+            e.preventDefault();
+        });
+        
+        $("body").on("contextmenu",function(e){
+            return false;
+        });
+    }); {% endcomment %}
+  
+    document.addEventListener('keyup', (e) => {
+    if (e.key == 'PrintScreen') {
+    navigator.clipboard.writeText('');
+    alert('Screenshots disabled!');
+    }
+    });
+    window.onbeforeunload = function () {
+        notblur=true
+        return "Are sure want to exit ";
+    };
+    const room = new VideoExpress.Room({
+        apiKey: '47464181', // add your OpenTok API key
+        sessionId: '1_MX40NzQ2NDE4MX5-MTY0ODA0NDkxNDI2OH5WeGtYUDY4Ty9McUxNSGRhQ2VCS2NXQkd-fg', // add your OpenTok Session ID
+        token: 'T1==cGFydG5lcl9pZD00NzQ2NDE4MSZzaWc9MzhkZWRiNjQ5ODMwNjY3N2QzYTlkMjQwZGU4YzU1Y2Y0Y2U3NmE3NTpzZXNzaW9uX2lkPTFfTVg0ME56UTJOREU0TVg1LU1UWTBPREEwTkRreE5ESTJPSDVXZUd0WVVEWTRUeTlNY1V4TlNHUmhRMlZDUzJOWFFrZC1mZyZjcmVhdGVfdGltZT0xNjQ4MDQ0OTMzJm5vbmNlPTAuMDQ2MzczMjUwODcwNzUwODQmcm9sZT1wdWJsaXNoZXImZXhwaXJlX3RpbWU9MTY1MDYzNjkzMSZpbml0aWFsX2xheW91dF9jbGFzc19saXN0PQ==', // add your OpenTok token
+        roomContainer: 'roomContainer',
+      });
+     
+      room.join();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</body>
+</html>

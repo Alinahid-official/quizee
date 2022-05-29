@@ -1,0 +1,100 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-180348448-1"></script>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Instructions</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/static/css/instruct.css">
+    <link rel="icon" href="images/favicon.png" type="image/gif">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Fredericka+the+Great&family=Londrina+Outline&family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap" rel="stylesheet">
+    <style media="screen">
+  .navbar{
+    background-color: black;
+  }
+  .vit{
+    height:5rem;
+    width: 12rem;
+  }
+  .backs
+  {
+    width: 4rem;
+    height: 3.5rem;
+    margin-left: 300px;
+  }
+  .gravi{
+    width: 12rem;
+    margin-left: 450px;
+  }
+  @media only screen and (max-width: 1080px){
+    .backs{
+      width: 4rem;
+      height: 3.5rem;
+      margin-left: -2.5rem;
+      margin-right: 0rem;
+    }
+    .gravi{
+      margin-left: 0rem;
+      width:10rem;
+      margin-right: 2rem;
+    }
+    .vit{
+      height:  0rem;
+      width: 0rem;
+    }
+  }
+
+  </style>
+  </head>
+  <body>
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+              <div class="container">
+      <a href="/" style="color:white;font-family: 'Syne Mono', monospace; font-size:25px;">Calibre Clinch</a>
+    </div>
+    </nav>
+ </div>
+    <div class="container-fluid-hmmm">
+      <h1 style="background-color: none; margin-bottom: 0px; padding-bottom: 0px;" class="inst text-center no">Instructions</h1>
+       <div class="yes">
+         <br>
+         <p class="firstp">Please read the follow instructions and proceed accordingly:</p>
+         <br>
+        <p>1. Answer all the questions.</p>
+        <p>2. There will be 20 questions in total and each question carries equal marks.</p>
+        <p>3. The maximum time duration is 20 minutes.</p>
+        <p>4. The students at the end of the exam should click on the SUBMIT button and submit the form without fail.</p>
+        <p>5. There is no negative marking for any question.</p>
+        <p>6. All the questions will have a single option correct, incase of multiple answers select the most appropriate one.</p>
+        <p>7. You can skip a question and revert to it anytime later during the test.</p>
+        <p>8. In case if two candidates have secured same marks, then the candidate who took less time to complete the</p>
+        <p class="plast">quiz will be given priority. So, it is adviced to submit the quiz as soon as u finish.</p>
+         <br>
+         <button class="btn btn-primary" onclick="popitup('http://localhost:8000/givesubtest/{{id}}')" >start</button>
+       </div>
+      </div>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script>
+      function popitup(url) {
+          console.log(url)
+          newwindow=window.open(url,'name','height='+screen.height+',width='+screen.width);
+          if (window.focus) {newwindow.focus()}
+          return false;
+          }
+  </script>
+</body>
+  </body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/css/extra.css">
+    <title>Student Dashboard</title>
+</head>
+<body>
+    <div>
+        <div>
+        <div class="dash_head">
+            welcome to Calbire Clinch
+        </div>
+        <div class="dash_info">
+            <div >
+                Name :{{request.user.username}}
+            </div>
+            <div>
+                <a href='/logout' style='text-decoration:none'>logout</a>
+            </div>
+
+        </div>
+        <div>
+            <h1>All contest</h1>
+            <ul>
+            {% for exam in exams%}
+                <li>Exam name:{{exam.name}} type:{{exam.exam_type}}
+                    {% if exam.exam_type == "mcq" %}
+                        {% if exam.exam_id in rexam_ids%}
+                            <a class="btn-p" href='#'>already registered</a>
+                        {% else %}
+                            <a class="btn-p" href='/payment/{{exam.exam_id}}'>Pay and Register</a>
+                        {% endif%}
+                     {% else%}
+                        {% if exam.exam_id in rexam_ids%}
+                            <a class="btn-p" href='#'>already registered</a>
+                        {% else %}
+                            <a class="btn-p" href="/payment/{{exam.exam_id}}">Pay and Register</a>
+                        {% comment %} <p onclick="popitup('http://localhost:8000/givesubtest/{{exam.exam_id}}')" style:"cursor:pointer" >give xam</p> {% endcomment %}
+                        {% endif%}
+                        
+                    </li>
+                    {% endif%}
+            {% endfor %}
+            </ul>
+        </div>
+        <div>
+            <h1>Registered contest</h1>
+            <ul>
+            {% for rexam in rexams%}
+                <li>Exam name:{{rexam.exam.name}} type:{{rexam.exam.exam_type}}
+                    {% if rexam.exam.exam_type == "mcq" %}
+                        {% if rexam.exam_id in gexam_ids%}
+                            <a class="btn-p" href='#'>see results</a>
+                        {% else %}
+                            <a class="btn-p" href='/instruction/{{rexam.exam_id}}'>start test</a>
+                        {% endif%}
+
+                     
+                     {% else%}
+                        {% if rexam.exam_id in gexam_ids%}
+                            <a class="btn-p" href='#'>see results</a>
+                        {% else %}
+                            <a class="btn-p" href='/instruction/{{rexam.exam_id}}'>start test</a>
+                        {% endif%}
+                         {% comment %} <a class='btn-p' href="/instruction/{{rexam.exam_id}}">start test</a>  {% endcomment %}
+                     {% comment %} <button class="btn-p" onclick="popitup('http://localhost:8000/givesubtest/{{rexam.exam.exam_id}}')"  >give xam</button> {% endcomment %}
+                    </li>
+                    {% endif%}
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+</html>

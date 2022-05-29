@@ -1,0 +1,34 @@
+# dependencies
+myapp/shape_predictor_68_face_landmarks.dat
+myapp/yolov3.weights
+
+
+.pnp
+.pnp.js
+
+# testing
+coverage
+
+# production
+build
+
+#ENV
+.env
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# misc
+.DS_Store
+.vscode
+

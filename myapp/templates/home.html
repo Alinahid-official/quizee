@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> Live video stream </title>
+
+    <script src="https://static.opentok.com/v1/js/video-express.js"></script>
+  </head>
+  <style>
+    body {
+      margin: 0;
+    }
+    
+    /* Assuming the name of the PreviewPublisher's container is previewContainer */
+    #previewContainer {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      justify-content: flex-end;
+      border-color: black;
+      border-radius: 5px;
+      border-style: dashed;
+      width: 640px;
+      height: 480px;
+      padding: 20px;
+    }
+    
+    /* Assuming the name of the Room's container is roomContainer */
+    #roomContainer {
+      width: 100vw;
+      height: calc(100vh - 90px);
+      background-color: #ddd;
+      position: relative;
+    }
+    #roomContainer > .OT_publisher {
+      top: 25px;
+      right: 25px;
+      position: absolute;
+      border-radius: 10px;
+    }
+    #roomContainer > .OT_screenshare {
+      top: 25px;
+      left: 25px;
+      position: absolute;
+      border-radius: 10px;
+    }
+  </style>
+  <body>
+   
+    {% comment %} <iframe
+    src="https://tokbox.com/embed/embed/ot-embed.js?embedId=67695c80-65bb-4c13-a338-2e48e9d2561f&room=DEFAULT_ROOM&iframe=true"
+    width=800
+    height=640
+    scrolling="auto"
+    allow="microphone; camera"
+  ></iframe> {% endcomment %}
+
+    <video id="stream" width="370" height="320">
+      <canvas id="capture" width="370" height="320">
+      </canvas>
+    </video>
+      {% comment %} <script type="text/javascript">
+        var stream = document.getElementById("stream");
+        var cameraStream = null;
+        function startStreaming() {
+  
+          var mediaSupport = 'mediaDevices' in navigator;
+          navigator.getUserMedia = navigator.getUserMedia ||
+          navigator.webkitGetUserMedia ||
+          navigator.mozGetUserMedia;
+      
+          if( mediaSupport && null == cameraStream ) {
+            navigator.mediaDevices.getUserMedia( { video: true, audio: true } )
+            .then( function( mediaStream ) {
+              cameraStream = mediaStream;
+              stream.srcObject = mediaStream;
+              stream.play();
+              audioContext = new AudioContext();
+              analyser = audioContext.createAnalyser();
+              microphone = audioContext.createMediaStreamSource(mediaStream);
+              javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+        
+              analyser.smoothingTimeConstant = 0.8;
+              analyser.fftSize = 1024;
+        
+              microphone.connect(analyser);
+              analyser.connect(javascriptNode);
+              javascriptNode.connect(audioContext.destination);
+        
+              javascriptNode.onaudioprocess = function() {
+                  array = new Uint8Array(analyser.frequencyBinCount);
+                  analyser.getByteFrequencyData(array);
+                  values = 0;
+          
+                  length = array.length;
+                  for (var i = 0; i < length; i++) {
+                    values += (array[i]);
+                  }
+              }
+            })
+            .catch( function( err ) {
+              console.log("Unable to access camera: " + err);
+            });
+          }
+          else {
+            alert('Your browser does not support media devices.');
+            return;
+          }
+        }
+        
+        window.onload = function() {
+          startStreaming();
+       } {% endcomment %}
+       {% comment %} </script> {% endcomment %}
+       <script>
+        const room = new VideoExpress.Room({
+          apiKey: '47464181', // add your OpenTok API key
+          sessionId: '1_MX40NzQ2NDE4MX5-MTY0ODA0NDkxNDI2OH5WeGtYUDY4Ty9McUxNSGRhQ2VCS2NXQkd-fg', // add your OpenTok Session ID
+          token: 'T1==cGFydG5lcl9pZD00NzQ2NDE4MSZzaWc9MzhkZWRiNjQ5ODMwNjY3N2QzYTlkMjQwZGU4YzU1Y2Y0Y2U3NmE3NTpzZXNzaW9uX2lkPTFfTVg0ME56UTJOREU0TVg1LU1UWTBPREEwTkRreE5ESTJPSDVXZUd0WVVEWTRUeTlNY1V4TlNHUmhRMlZDUzJOWFFrZC1mZyZjcmVhdGVfdGltZT0xNjQ4MDQ0OTMzJm5vbmNlPTAuMDQ2MzczMjUwODcwNzUwODQmcm9sZT1wdWJsaXNoZXImZXhwaXJlX3RpbWU9MTY1MDYzNjkzMSZpbml0aWFsX2xheW91dF9jbGFzc19saXN0PQ==', // add your OpenTok token
+          roomContainer: 'roomContainer',
+        });
+       
+        room.join();
+       </script>
+
+      
+
+  </body>
+
+</html>
